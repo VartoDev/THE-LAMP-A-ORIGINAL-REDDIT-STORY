@@ -1,0 +1,40 @@
+name: Build Windows EXE
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.9.6"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install panda3d
+          pip install pyinstaller
+
+      - name: Build EXE
+        run: |
+          pyinstaller --onefile --windowed ^
+            --add-data "Models;Models" ^
+            --add-data "music;music" ^
+            --add-data "photos;photos" ^
+            --add-data "sounds;sounds" ^
+            --add-data "videos;videos" ^
+            Horrorgame.py
+
+      - name: Upload EXE
+        uses: actions/upload-artifact@v4
+        with:
+          name: THE-LAMP-Windows
+          path: dist/Horrorgame.exe
