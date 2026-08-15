@@ -25,13 +25,13 @@ jobs:
 
       - name: Build EXE
         run: |
-          pyinstaller --onefile --windowed ^
-            --add-data "Models;Models" ^
-            --add-data "music;music" ^
-            --add-data "photos;photos" ^
-            --add-data "sounds;sounds" ^
-            --add-data "videos;videos" ^
-            Horrorgame.py
+         pyinstaller --onefile --windowed `
+          --add-data "Models;Models" `
+          --add-data "music;music" `
+          --add-data "photos;photos" `
+          --add-data "sounds;sounds" `
+          --add-data "videos;videos" `
+          Horrorgame.py
 
       - name: Upload EXE
         uses: actions/upload-artifact@v4
