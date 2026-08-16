@@ -21,9 +21,11 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install panda3d
+          pip install panda3d-gltf
           pip install pyinstaller
 
       - name: Build EXE
+        shell: powershell
         run: |
           pyinstaller --onefile --windowed `
             --add-data "Models;Models" `
@@ -32,7 +34,20 @@ jobs:
             --add-data "sounds;sounds" `
             --add-data "videos;videos" `
             --collect-all panda3d `
+            --collect-all gltf `
+            --hidden-import panda3d.core `
+            --hidden-import direct.showbase.ShowBase `
             Horrorgame.py
+
+      - name: Verify bundled resources
+        shell: powershell
+        run: |
+          Write-Host "Checking source resource folders..."
+          Get-ChildItem photos -File | ForEach-Object { Write-Host "PHOTO: $($_.Name)" }
+          Get-ChildItem sounds -File | ForEach-Object { Write-Host "SOUND: $($_.Name)" }
+          Get-ChildItem music -File | ForEach-Object { Write-Host "MUSIC: $($_.Name)" }
+          Get-ChildItem videos -File | ForEach-Object { Write-Host "VIDEO: $($_.Name)" }
+          Get-ChildItem Models -File | ForEach-Object { Write-Host "MODEL: $($_.Name)" }
 
       - name: Upload EXE
         uses: actions/upload-artifact@v4
