@@ -1,8 +1,17 @@
-
 import sys
 import os
 from panda3d.core import loadPrcFileData, Vec3
 import random
+
+
+def resource_path(relative_path):
+    """Return the correct path for normal Python runs and PyInstaller one-file builds."""
+    if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
+        base_path = sys._MEIPASS
+    else:
+        base_path = os.path.dirname(os.path.abspath(__file__))
+    return os.path.join(base_path, relative_path)
+
 from direct.interval.IntervalGlobal import LerpFunc, Sequence, Func, Wait
 
 
@@ -14,7 +23,7 @@ loadPrcFileData("", "gl-version 3 2")
 loadPrcFileData("", "window-title The Lamp (by Varto)")
 loadPrcFileData("", "win-size 1080 720")
 loadPrcFileData("", "fullscreen #f")
-loadPrcFileData("", "icon-filename photos/Bildschirmfoto 2026-06-14 um 23.49.10.ico") 
+loadPrcFileData("", f"icon-filename {resource_path('photos/Bildschirmfoto 2026-06-14 um 23.49.10.ico')}") 
 
 # Grafik & Performance
 loadPrcFileData("", "win-background-color 0 0 0")
@@ -64,8 +73,7 @@ class HorrorGame(ShowBase):
 
         # Texture-Suchpfade SOFORT konfigurieren (BEVOR irgendwelche Modelle geladen werden!)
         from panda3d.core import get_model_path
-        base_path = os.path.dirname(os.path.abspath(__file__))
-        texture_path = os.path.join(base_path, "Models", "textures")
+        texture_path = resource_path('Models/textures')
         get_model_path().prepend_path(texture_path)  # prepend = höchste Priorität
         print(f"✓ Model-Suchpfade konfiguriert:")
         print(f"  - Texture-Pfad: {texture_path}")
@@ -158,40 +166,38 @@ class HorrorGame(ShowBase):
         self.zeige_interaktions_text = OnscreenText(text="", pos=(0, -0.24), scale= 0.056, fg=(1, 1, 1, 1), align=TextNode.ACenter, mayChange=True)
         self.Autor.setFont(self.game_font1)
         self.video3 = MovieTexture("menu_video")
-        base_path = os.path.dirname(os.path.abspath(__file__))
-        self.video_path_menu = os.path.join(base_path, "videos", "0607-Kopie-Kopie(1).mp4")
+        self.video_path_menu = resource_path('videos/0607-Kopie-Kopie(1).mp4')
         if self.video3.read(self.video_path_menu):
           self.video3.setLoopCount(0)
-        base_path = os.path.dirname(os.path.abspath(__file__))
         
         # 1. Sounds vorab laden
-        self.hover_sound = loader.loadSfx("sounds/justsomesounds-click-sound-432501.mp3")
-        self.Text_Blip_sound = loader.loadSfx("sounds/468925__malakme__high-text-blip.ogg")
-        self.Ringtone = loader.loadSfx("sounds/sdanezis-cell-phone-ringtone-01-sfx-317313.mp3")
-        self.FlashBang = loader.loadSfx("sounds/Flashbang.mp3")
-        self.Musik_Piano = loader.loadSfx("music/gregorquendel-dreamlike-piano-and-strings-soundscape-291600 Kopie.mp3")
+        self.hover_sound = loader.loadSfx(resource_path('sounds/justsomesounds-click-sound-432501.mp3'))
+        self.Text_Blip_sound = loader.loadSfx(resource_path('sounds/468925__malakme__high-text-blip.ogg'))
+        self.Ringtone = loader.loadSfx(resource_path('sounds/sdanezis-cell-phone-ringtone-01-sfx-317313.mp3'))
+        self.FlashBang = loader.loadSfx(resource_path('sounds/Flashbang.mp3'))
+        self.Musik_Piano = loader.loadSfx(resource_path('music/gregorquendel-dreamlike-piano-and-strings-soundscape-291600 Kopie.mp3'))
 
-        #self.Ticking_sound = loader.loadSfx("sounds/Tick_Tack.mp3")
+        #self.Ticking_sound = loader.loadSfx(resource_path('sounds/Tick_Tack.mp3'))
         
         # 2. Bilder vorab laden und verstecken
-        self.video_path8 = os.path.join(base_path, "photos", "arrow-return-or-reply-white-color-icon-vector.jpg")
+        self.video_path8 = resource_path('photos/arrow-return-or-reply-white-color-icon-vector.jpg')
         self.mein_bild2 = OnscreenImage(image=self.video_path8, pos=(-0.9, 0, 0.9), scale=0.1)
         self.mein_bild2.setTransparency(True)
         self.mein_bild2.hide() 
-        self.Audio_vom_Video = loader.loadSfx("sounds/freesound_community-medium-text-blip-14855.mp3") # Standardmäßig unsichtbar
-        self.Lampe_click = loader.loadSfx("sounds/Boom.mp3")
-        self.Walking_sound = loader.loadSfx("sounds/Walking.mp3")
-        self.Glitch_Sfx = loader.loadSfx("sounds/Glitch.mp3")
-        self.Boom = loader.loadSfx("sounds/SlowBoom.mp3")
-        self.Dream5 = loader.loadSfx("sounds/Dream.mp3")
-        self.Hospitel_Sound = loader.loadSfx("sounds/freesound_community-steadyheartratemonitorloop1min-6274.mp3")
-        self.Atmen_Sound = loader.loadSfx("sounds/freesound_community-heavy-breathing-14431.mp3")
-        self.Riser = loader.loadSfx("sounds/dragon-studio-cinematic-riser-03-414575")
-        self.Door_slam = loader.loadSfx("sounds/freesound_community-door-slam-angrily-86963.mp3")
-        self.Musik_Piano = loader.loadSfx("music/gregorquendel-dreamlike-piano-and-strings-soundscape-291600 Kopie.mp3")
+        self.Audio_vom_Video = loader.loadSfx(resource_path('sounds/freesound_community-medium-text-blip-14855.mp3')) # Standardmäßig unsichtbar
+        self.Lampe_click = loader.loadSfx(resource_path('sounds/Boom.mp3'))
+        self.Walking_sound = loader.loadSfx(resource_path('sounds/Walking.mp3'))
+        self.Glitch_Sfx = loader.loadSfx(resource_path('sounds/Glitch.mp3'))
+        self.Boom = loader.loadSfx(resource_path('sounds/SlowBoom.mp3'))
+        self.Dream5 = loader.loadSfx(resource_path('sounds/Dream.mp3'))
+        self.Hospitel_Sound = loader.loadSfx(resource_path('sounds/freesound_community-steadyheartratemonitorloop1min-6274.mp3'))
+        self.Atmen_Sound = loader.loadSfx(resource_path('sounds/freesound_community-heavy-breathing-14431.mp3'))
+        self.Riser = loader.loadSfx(resource_path('sounds/dragon-studio-cinematic-riser-03-414575'))
+        self.Door_slam = loader.loadSfx(resource_path('sounds/freesound_community-door-slam-angrily-86963.mp3'))
+        self.Musik_Piano = loader.loadSfx(resource_path('music/gregorquendel-dreamlike-piano-and-strings-soundscape-291600 Kopie.mp3'))
         # 3. Zusätzliche Videos vorab laden
         self.video4 = MovieTexture("menu_videoo")
-        self.video_path7 = os.path.join(base_path, "videos", "0607-Kopie-Kopie(2).mp4")
+        self.video_path7 = resource_path('videos/0607-Kopie-Kopie(2).mp4')
         if self.video4.read(self.video_path7):
             self.video4.setLoopCount(0)
             self.video4.stop()         # <--- NEU: Verhindert, dass das Video im Hintergrund unbemerkt läuft
@@ -277,7 +283,7 @@ class HorrorGame(ShowBase):
             #self.Autor.setFont(self.game_font)
             #if not self.sound_check:
                 #self.sound_check = True
-                #self.Sound_Lampe = loader.loadSfx("sounds/dragon-studio-light-switch-382712.mp3")
+                #self.Sound_Lampe = loader.loadSfx(resource_path('sounds/dragon-studio-light-switch-382712.mp3'))
                 #self.Sound_Lampe.play()
 
         #if sekunden == 3:
@@ -291,16 +297,14 @@ class HorrorGame(ShowBase):
             self.beginnen_text.setText("Left click to begin!")
             self.beginnen_text.setFg((1, 1, 1, 1))
             self.beginnen_text.setFont(self.game_font1)
-            base_path = os.path.dirname(os.path.abspath(__file__))
-            self.video_path6 = os.path.join(base_path, "photos", "images.jpeg")
+            self.video_path6 = resource_path('photos/images.jpeg')
             #self.mein_bild = OnscreenImage(image=self.video_path6, pos=(1, 0.90, 0.90), scale=0.05)
             #self.mein_bild.setTransparency(True)
           
         
 
 
-            base_path = os.path.dirname(os.path.abspath(__file__))
-            self.video_path = os.path.join(base_path, "videos", "0607-Kopie.mp4")
+            self.video_path = resource_path('videos/0607-Kopie.mp4')
             
             
                       # 2. MovieTexture korrekt erstellen und laden
@@ -317,7 +321,7 @@ class HorrorGame(ShowBase):
               # 4. Video auf die Fläche legen und abspielen
               self.video_flaeche2.setTexture(self.video2)
               self.video2.play()
-              self.Humming_sound = loader.loadSfx("sounds/dewyproductions2022-real-vhs-169982.mp3")
+              self.Humming_sound = loader.loadSfx(resource_path('sounds/dewyproductions2022-real-vhs-169982.mp3'))
               self.Humming_sound.setLoop(True)
               self.Humming_sound.play()
               
@@ -627,8 +631,7 @@ class HorrorGame(ShowBase):
                  
        
     def starte_auto_event2(self, task):
-        base_path = os.path.dirname(os.path.abspath(__file__))
-        model_path = os.path.join(base_path, "Models", "old_rusty_car_2.glb")
+        model_path = resource_path('Models/old_rusty_car_2.glb')
         self.Auto_Modell = loader.loadModel(model_path)
         self.Auto_Modell.reparentTo(render)
         self.Auto_Modell.setPos(60, -90, 0)
@@ -666,7 +669,7 @@ class HorrorGame(ShowBase):
 
         LerpFunc(lambda a: self.Auto_Modell.setPos(60, a, 0), fromData=-90, toData=200, duration=7).start()
         
-        Car_passing_by = loader.loadSfx("sounds/soundreality-car-passing-city-364146.mp3")
+        Car_passing_by = loader.loadSfx(resource_path('sounds/soundreality-car-passing-city-364146.mp3'))
        
         Car_passing_by.play()
         
@@ -707,8 +710,7 @@ class HorrorGame(ShowBase):
        
       
     def starte_auto_event(self):
-          base_path = os.path.dirname(os.path.abspath(__file__))
-          model_path = os.path.join(base_path, "Models", "old_rusty_car_2.glb")
+          model_path = resource_path('Models/old_rusty_car_2.glb')
           self.Auto_Modell1 = loader.loadModel(model_path)
           self.Auto_Modell1.reparentTo(render)
           self.Auto_Modell1.setPos(-56.5, -80, 0)
@@ -726,7 +728,7 @@ class HorrorGame(ShowBase):
           #LerpFunc(lambda a: self.Auto_Modell.setH(a), fromData=180, toData=200, duration=1).start()
           #LerpFunc(lambda a: self.Auto_Modell.setX(a), fromData=-55.5, toData=-56, duration=1).start()
         
-          car_crash = loader.loadSfx("sounds/pwlpl-car_crash-377291.mp3")
+          car_crash = loader.loadSfx(resource_path('sounds/pwlpl-car_crash-377291.mp3'))
           car_crash.play()
 
     def Vector3_updater_to_player(self, task):
@@ -806,7 +808,7 @@ class HorrorGame(ShowBase):
             # Ich mach jetzt ein sogenanntes "Ruckeln" , damit es sich so anfühlt als wäre man in einer Simulation, bei der man die Verbindung verliert
             if self.sound_check10 == False and -4.5 < self.camera.getY() < -3.76 and self.Kapitel_2_beginn == False:
               self.sound_check10 = True
-              self.Glitch_Sound = loader.loadSfx("sounds/dbsound-electrical-issue-affecting-household-appliances-246811.mp3")
+              self.Glitch_Sound = loader.loadSfx(resource_path('sounds/dbsound-electrical-issue-affecting-household-appliances-246811.mp3'))
               self.Glitch_Sound.setVolume(1)
               self.Glitch_Sound.play()
         
@@ -819,7 +821,7 @@ class HorrorGame(ShowBase):
 
         if 0 < self.camera.getX() < 1 and self.b == 1 and self.jumpscare_passiert == False and self.Kapitel_2_beginn == False and self.d == 0:
             self.jumpscare_passiert = True
-            jumpscare_sound = loader.loadSfx("sounds/freesound_community-jump-scare-sound-2-82831.mp3")
+            jumpscare_sound = loader.loadSfx(resource_path('sounds/freesound_community-jump-scare-sound-2-82831.mp3'))
             #jumpscare_sound.play()
             self.Horror_music.stop()
             self.Night_ambiente.stop()
@@ -854,7 +856,7 @@ class HorrorGame(ShowBase):
             self.ambient_sound_gestartet = True
             self.Night_ambiente.stop()
             self.Horror_music.stop()
-            self.Horror_ambiente_background = loader.loadSfx("sounds/tanweraman-dark-rumble-tension-370005.mp3")
+            self.Horror_ambiente_background = loader.loadSfx(resource_path('sounds/tanweraman-dark-rumble-tension-370005.mp3'))
             self.Horror_ambiente_background.setLoop(True)
             self.Horror_ambiente_background.play()
 
@@ -1100,7 +1102,7 @@ class HorrorGame(ShowBase):
             if moving:
                 if  self.sound_check9 == False:
                     self.sound_check9 = True
-                    self.Schritte_sound = loader.loadSfx("sounds/freesoundsxx-walking-on-concrete-ver-2-268513.mp3")
+                    self.Schritte_sound = loader.loadSfx(resource_path('sounds/freesoundsxx-walking-on-concrete-ver-2-268513.mp3'))
                     self.Schritte_sound.setLoop(True)
                     self.Schritte_sound.setVolume(1)
                     self.Schritte_sound.play()
@@ -1118,7 +1120,7 @@ class HorrorGame(ShowBase):
                     self.sound_check12 = True
                     # Sicherstellen, dass Walking_sound geladen ist
                     if not hasattr(self, 'Walking_sound') or self.Walking_sound is None:
-                        self.Walking_sound = loader.loadSfx("sounds/Walking.mp3")
+                        self.Walking_sound = loader.loadSfx(resource_path('sounds/Walking.mp3'))
                     self.Walking_sound.setLoop(True)
                     self.Walking_sound.setVolume(1)
                     self.Walking_sound.play()
@@ -1134,7 +1136,7 @@ class HorrorGame(ShowBase):
             if moving:
                 if not self.sound_check14:
                     self.sound_check14 = True
-                    self.Schritte_sound5 = loader.loadSfx("sounds/jokerzillagames-walking-366933.mp3")
+                    self.Schritte_sound5 = loader.loadSfx(resource_path('sounds/jokerzillagames-walking-366933.mp3'))
                     self.Schritte_sound5.setLoop(True)
                     self.Schritte_sound5.setVolume(1)
                     self.Schritte_sound5.play()
@@ -1268,8 +1270,7 @@ class HorrorGame(ShowBase):
 
           if not self.Taste_an and self.b == 1:
             # Hier kommt mein Video rein, was ein Menü darstellen soll
-            base_path = os.path.dirname(os.path.abspath(__file__))
-            self.video_path = os.path.join(base_path, "videos", "0607-Kopie-Kopie(1).mp4")
+            self.video_path = resource_path('videos/0607-Kopie-Kopie(1).mp4')
             self.Knopf_bereit_damit_Ui_clickbar_ist_für_pause_menu = True
             self.video3 = MovieTexture("mein_video_loop")
             if self.video3.read(self.video_path):
@@ -1348,7 +1349,7 @@ class HorrorGame(ShowBase):
                 )
                 text_wird_größerr.start()
                 if not self.hover_sound_gespielt:
-                  meine_sound_click = loader.loadSfx("sounds/miraclei-sample_hover_subtle04_kofi_by_miraclei-364171.mp3")
+                  meine_sound_click = loader.loadSfx(resource_path('sounds/miraclei-sample_hover_subtle04_kofi_by_miraclei-364171.mp3'))
                   meine_sound_click.setVolume(0.3)  
                   meine_sound_click.play()
                 
@@ -1367,13 +1368,12 @@ class HorrorGame(ShowBase):
                     self.mein_bild2.hide()   # Stoppe das Intro-Video
                     if self.Capcut_Scene == False:
                       self.Capcut_Scene = True
-                      self.Computer_startet = loader.loadSfx("sounds/soundreality-pc-computer-hard-drive-disk-hum-462688.mp3")
+                      self.Computer_startet = loader.loadSfx(resource_path('sounds/soundreality-pc-computer-hard-drive-disk-hum-462688.mp3'))
                       self.Computer_startet.play()
                       self.taskMgr.doMethodLater(4.5, lambda task: Video_Intro(self, task), "StartVideoIntroTimer")
                       # 1. Dynamischen Pfad zur AVI-Datei erstellen
                       def Video_Intro(self, task):
-                        base_path = os.path.dirname(os.path.abspath(__file__))
-                        self.video_path = os.path.join(base_path, "videos", "EndProduktFürTeil1.mp4")
+                        self.video_path = resource_path('videos/EndProduktFürTeil1.mp4')
                         if hasattr(self, 'video_flaeche3'):
                             self.video_flaeche3.removeNode()
                         # 2. MovieTexture korrekt erstellen und laden
@@ -1396,19 +1396,19 @@ class HorrorGame(ShowBase):
                           self.video_flaeche.setTexture(self.video)
                           self.video.play()
                           
-                          self.Der_SOund_für_die_Szene = loader.loadSfx("sounds/EndProduktFürTeil1 Kopie.mp3")
+                          self.Der_SOund_für_die_Szene = loader.loadSfx(resource_path('sounds/EndProduktFürTeil1 Kopie.mp3'))
                           self.Der_SOund_für_die_Szene.play()
                           
                       self.hover_sound.play()
                       self.beginnen_text.setText("") 
                     #self.meine_musik.stop()
                     
-                    #self.mein_sound = loader.loadSfx("sounds/freesound_community-slot-loading-cd-dvd-drive-spin-up-fail-incl-27275.mp3")
+                    #self.mein_sound = loader.loadSfx(resource_path('sounds/freesound_community-slot-loading-cd-dvd-drive-spin-up-fail-incl-27275.mp3'))
                     #self.mein_sound.play()
                       self.taskMgr.doMethodLater(4.5, lambda task: sprechen(self, task), "StrtKapitel1Timer")  
                     
                     def sprechen(self, task):
-                      self.Speaking_person = loader.loadSfx("sounds/audio (online-audio-converter.com).mp3") 
+                      self.Speaking_person = loader.loadSfx(resource_path('sounds/audio (online-audio-converter.com).mp3')) 
                       self.Speaking_person.play()
                       self.Computer_startet.setVolume(0.1)  # Computer-Start-Sound leiser machen
                       return task.done
@@ -1445,11 +1445,11 @@ class HorrorGame(ShowBase):
         self.Check_for_cordinates = True
       if self.a==1:
         self.b = 1
-        self.Night_ambiente = loader.loadSfx("sounds/freesound_community-night-ambience-17064.mp3")
+        self.Night_ambiente = loader.loadSfx(resource_path('sounds/freesound_community-night-ambience-17064.mp3'))
         self.Night_ambiente.setLoop(True)
         self.Night_ambiente.play()
         # Maus direkt zentrieren
-        self.Horror_music = loader.loadSfx("sounds/universfield-horror-background-atmosphere-025-499631.mp3")
+        self.Horror_music = loader.loadSfx(resource_path('sounds/universfield-horror-background-atmosphere-025-499631.mp3'))
         self.Horror_music.setLoop(True)
         self.Horror_music.play()
       
@@ -1463,11 +1463,10 @@ class HorrorGame(ShowBase):
       self.Title.detachNode()
       self.Autor.detachNode()
 
-      #Lets_go_home = loader.loadSfx("sounds/ElevenLabs_2026-06-15T12_43_30_Max - Elearning and Documentary_pvc_sp100_s50_sb75_v3.mp3")
+      #Lets_go_home = loader.loadSfx(resource_path('sounds/ElevenLabs_2026-06-15T12_43_30_Max - Elearning and Documentary_pvc_sp100_s50_sb75_v3.mp3'))
       #Lets_go_home.play()
       
-      base_path = os.path.dirname(os.path.abspath(__file__))
-      model_path = os.path.join(base_path, "Models", "model.glb")
+      model_path = resource_path('Models/model.glb')
       self.Protagonist_model = loader.loadModel(model_path)
       self.Protagonist_model.reparentTo(render)
       self.Protagonist_model.setPos(-11.2, 1, -10.1)
@@ -1481,11 +1480,8 @@ class HorrorGame(ShowBase):
       
       # LICHTER - MASSIV VERSTÄRKT für Sichtbarkeit
       
-
-      # MODELL LADEN
-      base_path = os.path.dirname(os.path.abspath(__file__))
-      model_name = "procedural_city_5.glb"  # GLB direkt! (nicht OBJ)
-      model_path = os.path.join(base_path, "Models", "procedural_city_5.glb", model_name)
+      model_name = "procedural_city_5.glb"
+      model_path = resource_path("Models/procedural_city_5.glb/" + model_name)
 
       
       # PERFORMANCE: Modell laden und zur Render hinzufügen
@@ -1616,15 +1612,14 @@ class HorrorGame(ShowBase):
     def ambulance_kommt(self, task):
               if hasattr(self, 'Horror_ambiente_background'):
                 self.Horror_ambiente_background.setVolume(0.01)
-              self.Ambulance_sound = loader.loadSfx("sounds/49053354-ambulance-312230.mp3")
+              self.Ambulance_sound = loader.loadSfx(resource_path('sounds/49053354-ambulance-312230.mp3'))
               self.Ambulance_sound.play()
-              self.heart_beat = loader.loadSfx("sounds/dragon-studio-heartbeat-sound-372448.mp3")
+              self.heart_beat = loader.loadSfx(resource_path('sounds/dragon-studio-heartbeat-sound-372448.mp3'))
               self.heart_beat.play()
               return task.done
 
     def Kapitel_2_echter_beginn(self, task):
-        base_path = os.path.dirname(os.path.abspath(__file__))
-        self.video_path = os.path.join(base_path, "videos", "0607-Kopie-Kopie (2)(1).mp4")
+        self.video_path = resource_path('videos/0607-Kopie-Kopie (2)(1).mp4')
         
         self.video7 = MovieTexture("mein_video_loop")
         if self.video7.read(self.video_path):
@@ -1658,7 +1653,6 @@ class HorrorGame(ShowBase):
         self.Wohnung_geladen = True
         
         self.Kapitel_2_beginn = True
-        base_path = os.path.dirname(os.path.abspath(__file__))
         self.Pause()
         
         # 1. Video ausblenden/entfernen
@@ -1677,12 +1671,12 @@ class HorrorGame(ShowBase):
         
         # 3. Texture-Suchpfade konfigurieren (WICHTIG für externe Texturen!)
         from panda3d.core import get_model_path
-        texture_path = os.path.join(base_path, "Models", "textures")
+        texture_path = resource_path('Models/textures')
         get_model_path().append_path(texture_path)
         print(f"Texture-Pfad hinzugefügt: {texture_path}")
         
         # 4. Wohnung laden
-        model_path = os.path.join(base_path, "Models", "white_modern_living_room.glb")
+        model_path = resource_path('Models/white_modern_living_room.glb')
         self.Wohnung = loader.loadModel(model_path)
         self.Wohnung.reparentTo(render)
         self.Wohnung.setPos(0, 0, 0)
@@ -1726,8 +1720,7 @@ class HorrorGame(ShowBase):
 
 
     def Task_Anzeige(self):
-        base_path = os.path.dirname(os.path.abspath(__file__))
-        self.video_path = os.path.join(base_path, "videos", "0607-Kopie-Kopie (3).mp4")
+        self.video_path = resource_path('videos/0607-Kopie-Kopie (3).mp4')
            
         self.video10 = MovieTexture("mein_video_loop")
         if self.video10.read(self.video_path):
@@ -1804,8 +1797,7 @@ class HorrorGame(ShowBase):
         self.e = 1
         self.setBackgroundColor(0, 0, 0)
        
-        base_path = os.path.dirname(os.path.abspath(__file__))
-        model_path = os.path.join(base_path, "Models", "not_really_japanese_themed_pathway.glb")
+        model_path = resource_path('Models/not_really_japanese_themed_pathway.glb')
         
         self.Kapitel_3_Szene = loader.loadModel(model_path)
         self.Kapitel_3_Szene.reparentTo(render)
@@ -1866,8 +1858,7 @@ class HorrorGame(ShowBase):
             return task.done
 
     def Kapitel_3_Video_starten(self, task):
-        base_path = os.path.dirname(os.path.abspath(__file__))
-        self.video_path = os.path.join(base_path, "videos", "0607-Kopie-Kopie (2)-Kopie.mp4")
+        self.video_path = resource_path('videos/0607-Kopie-Kopie (2)-Kopie.mp4')
         
         self.video8 = MovieTexture("mein_video_loop")
         if self.video8.read(self.video_path):
@@ -1934,8 +1925,7 @@ class HorrorGame(ShowBase):
             self.Kopie1.removeNode()
             del self.Kopie1
         
-        base_path = os.path.dirname(os.path.abspath(__file__))
-        self.video_path = os.path.join(base_path, "videos", "0607-Kopie-Kopie (2)(2).mp4")
+        self.video_path = resource_path('videos/0607-Kopie-Kopie (2)(2).mp4')
         
         self.video9 = MovieTexture("mein_video_loop")
         if self.video9.read(self.video_path):
@@ -1987,8 +1977,7 @@ class HorrorGame(ShowBase):
             self.e = 0
             print("Die buchstaben wurden umgesetzt")
 
-        base_path = os.path.dirname(os.path.abspath(__file__))
-        model_path12 = os.path.join(base_path, "Models", "stylized_eye.glb")
+        model_path12 = resource_path('Models/stylized_eye.glb')
         
         self.Traum_Szene_model = loader.loadModel(model_path12)
         self.Traum_Szene_model.reparentTo(render)
@@ -2014,8 +2003,7 @@ class HorrorGame(ShowBase):
         self.Kopie3.setHpr(0, -20, 0)
         self.Kopie3.lookAt(self.camera.getPos(render))  # Make the copy look at the camera initially
 
-        base_path = os.path.dirname(os.path.abspath(__file__))
-        model_path13 = os.path.join(base_path, "Models", "lamp.glb")
+        model_path13 = resource_path('Models/lamp.glb')
         
         self.Traum_Szene_model2 = loader.loadModel(model_path13)
         self.Traum_Szene_model2.reparentTo(render)
@@ -2030,8 +2018,7 @@ class HorrorGame(ShowBase):
         self.Auto_Modell3.setHpr(0, -90, 0)
         self.Auto_Modell3.setScale(0.034)
 
-        base_path = os.path.dirname(os.path.abspath(__file__))
-        model_path14 = os.path.join(base_path, "Models", "House.glb")
+        model_path14 = resource_path('Models/House.glb')
         
         self.Traum_Szene_model3 = loader.loadModel(model_path14)
         self.Traum_Szene_model3.reparentTo(render)
@@ -2041,8 +2028,7 @@ class HorrorGame(ShowBase):
         self.Traum_Szene_model3.setScale(0.05)
         self.Traum_Szene_model3.setHpr(0, 0, 0)
 
-        base_path = os.path.dirname(os.path.abspath(__file__))
-        model_path15 = os.path.join(base_path, "Models", "modern_dining_room.glb")
+        model_path15 = resource_path('Models/modern_dining_room.glb')
 
         self.Traum_Szene_model4 = loader.loadModel(model_path15)
         self.Traum_Szene_model4.reparentTo(render)
@@ -2220,7 +2206,7 @@ class HorrorGame(ShowBase):
 
     def Das_Finale(self):
         #base_path = os.path.dirname(os.path.abspath(__file__))
-        #self.video_path = os.path.join(base_path, "videos", "0630-Kopie.mov")
+        #self.video_path = resource_path('videos/0630-Kopie.mov')
         self.g = 0
         
         #self.video11 = MovieTexture("mein_video_loop")
@@ -2285,8 +2271,7 @@ class HorrorGame(ShowBase):
        
         
         
-        base_path = os.path.dirname(os.path.abspath(__file__))
-        model_path = os.path.join(base_path, "Models", "corridor_hospital_baked_reflections.glb")
+        model_path = resource_path('Models/corridor_hospital_baked_reflections.glb')
         self.Hospital_model = loader.loadModel(model_path)
         self.Hospital_model.reparentTo(render)
         self.Hospital_model.setPos(0, 0, 0)
@@ -2336,8 +2321,7 @@ class HorrorGame(ShowBase):
 
     def Das_Echte_Final4(self, task):
         self.setBackgroundColor(0, 0, 0)
-        base_path = os.path.dirname(os.path.abspath(__file__))
-        self.video_path = os.path.join(base_path, "videos", "0607-Kopie-Kopie (1)-Kopie.mp4")
+        self.video_path = resource_path('videos/0607-Kopie-Kopie (1)-Kopie.mp4')
         
         self.video9 = MovieTexture("mein_video_loop")
         if self.video9.read(self.video_path):
