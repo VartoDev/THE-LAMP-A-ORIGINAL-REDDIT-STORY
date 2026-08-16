@@ -1480,8 +1480,10 @@ class HorrorGame(ShowBase):
       
       # LICHTER - MASSIV VERSTÄRKT für Sichtbarkeit
       
-      model_name = "procedural_city_5.glb"
-      model_path = resource_path("Models/procedural_city_5.glb/" + model_name)
+
+      # MODELL LADEN
+      model_name = "procedural_city_5.glb"  # GLB direkt! (nicht OBJ)
+      model_path = resource_path("Models/procedural_city_5.glb")
 
       
       # PERFORMANCE: Modell laden und zur Render hinzufügen
